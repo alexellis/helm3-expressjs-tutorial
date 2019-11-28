@@ -2,11 +2,11 @@
 
 In this guide you'll learn how to create a Helm Chart with Helm 3 for an [Express.js](https://expressjs.com) microservice.
 
-Developers adopting Kubernetes often turn to helm to find pre-packaged software with a single command. Software is packaged in charts which allows for customization at install time and for lifecycle management such as upgrades and removal of software.
+Developers adopting [Kubernetes](https://kubernetes.io) often turn to [helm](https://helm.sh) to find pre-packaged software with a single command. Software is packaged in charts which allows for customization at install time and for lifecycle management such as upgrades and removal of software.
 
 ## Helm 2 is dead, long live Helm 3!
 
-Up until recently Helm 2 also shipped with a server side component called `tiller`. Unfortunately `tiller` was insecure by default and left many clusters vulnerable to attach. Steps were published by the project maintainers to manually lock-down access, but it was too late and so there is now a mix of helm lovers and haters in the world.
+Up until recently Helm 2 also shipped with a server side component called `tiller`. Unfortunately `tiller` was insecure by default and left many clusters vulnerable to attack. Steps were published by the project maintainers to manually lock-down access, but it was too late and so there is now a mix of helm lovers and haters in the world.
 
 Helm 3 aims to consolidate developers by simply removing the `tiller` component all together. The logic that controlled updates and removal is now run at the client-side and only minimal state is retained with the cluster. In this guide we'll be using helm 3, but if you have to use helm 2 for some reason, then the steps will be largely the same.
 
@@ -103,9 +103,9 @@ helm delete postgresql
 
 * Fork the code here: [alexellis/expressjs-k8s](https://github.com/alexellis/expressjs-k8s)
 
-We already have some static YAML manifests in the repository, but helm allows us to use [Golang's template language](https://golang.org/pkg/text/template/https://golang.org/pkg/text/template/) to replace values at deployment time.
+We already have some static YAML manifests in the repository, but helm allows us to use [Golang's template language](https://golang.org/pkg/text/template/) to replace values at deployment time.
 
-For me, templating is a core part of the value of helm. Let's look at why we need it.
+For me templating is a core part of the value of helm. Let's look at why we need it.
 
 Here's an ingress file that has a hard-coded hostname of the website users will navigate to, in order to see our code. 
 
@@ -158,7 +158,9 @@ domain: example.com
 
 * Or by passing a flag at install time: `--set domain=example.com`
 
-Civo has chosen to use Traefik as an IngressController instead of the more common Nginx, this is because k3s ships with it by default. There are pros and cons to a broad eco-system and to competition within the Cloud Native Computing Foundation - on the one hand we have choice, but on the other we have configuration.
+If you're using Civo's k3s service, then k3s pre-installs [Traefik](https://traefik.io) as the [IngressController](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) instead of the more common option: Nginx.
+
+> The [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io) hosts the [Kubernetes project](https://kubernetes.io), and fosters a broad ecosystem. There are pros and cons to many competing projects however, on the one hand we have choice, but on the other we have to make more decisions and configure more tools.
 
 We now need to add a new template for the IngressController to change between `nginx` and `traefik` for different users and environments:
 
@@ -314,11 +316,13 @@ You can run this command as many times as you need until everything works exactl
 
 Now you can test the chart with ingress, which is what we looked at earlier. We needed a way to dynamically switch the domain name and the IngressController.
 
-We can do this via `--set` override or by editing `values.yaml`.
+We can do this via passing `--set` to the `install/upgrade` commands or by editing `values.yaml`.
+
+> You can also maintain several YAML files with overrides like `values-staging.yaml` or `values-prod.yaml` - just add `--values FILENAME.yaml` to your `install/upgrade` command.
 
 For example you can enable ingress like this:
 
-```
+```sh
 helm upgrade --install test-app expressjs-k8s --set ingress.enabled=true
 ```
 
@@ -337,11 +341,13 @@ ingress:
 
 Now run:
 
-```
+```sh
 helm upgrade --install test-app expressjs-k8s
+```
 
-# Get Ingress records:
+Now if you look for Ingress records in the cluster you'll find the new one:
 
+```sh
 kubectl get ingress -o wide --all-namespaces
 
 NAMESPACE   NAME                     HOSTS                 ADDRESS        PORTS   AGE
