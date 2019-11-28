@@ -20,15 +20,19 @@ This sample application was used in a previous guide: [Get a TLS Certificate For
 
 If you're a part of the [#KUBE100 program](https://www.civo.com/blog/kube100-is-here), then create a new cluster in your Civo dashboard and configure your `kubectl` to point at the new cluster.
 
+> For a full walk-through of Civo k3s you can see my blog post - [The World's First Managed k3s](https://blog.alexellis.io/the-worlds-first-managed-k3s/)
+
 Alternatively, you can use any other Kubernetes cluster, or if you are on Civo already but not in #KUBE100, then create a new Small or Medium Instance, then use [k3sup ('ketchup')](https://k3sup.dev) to install k3s.
 
-Check that you are pointing at the correct cluster before continuing:
+Before going any futher, check that you are pointing at the correct cluster:
 
-```
+```sh
 kubectl config get-contexts
+
+kubectl get node -o wide
 ```
 
-### Get helm3
+### Get helm 3
 
 If you're using MacOS or Linux simply run the below:
 
@@ -179,7 +183,7 @@ After:
 
 Remove any sample / pre-made charts with:
 
-```
+```sh
 cd expressjs-k8s
 rm -rf chart
 ```
@@ -284,7 +288,7 @@ After installation the NOTES.txt file will print out some hints on how to use th
 
 Charts can be published to either an S3 bucket or a GitHub repository using GitHub pages, but before that we need to test that everything operates as expected.
 
-```
+```sh
 $ cd chart
 
 $ helm upgrade --install test-app expressjs-k8s
@@ -310,7 +314,7 @@ Try to connect with a browser:
 
 You can see that I updated NOTES.txt to print out some useful hints on how to test the application.
 
-![](/docs/test-chart.png)
+![Comparing static YAML vs YAML templates](/docs/test-chart.png)
 
 You can run this command as many times as you need until everything works exactly as you expected it to.
 
@@ -403,7 +407,7 @@ Replace `alexellis` with your username and `expressjs-k8s` with your repo and he
 
 Now generate your charts:
 
-```
+```sh
 $ make charts
 
 Successfully packaged chart and saved it to: /Users/alex/go/src/github.com/alexellis/expressjs-k8s/chart/expressjs-k8s-0.1.0.tgz
@@ -429,7 +433,7 @@ Now we need to enable GitHub pages to publish the docs folder via the Settings p
 
 Now we can remove our testing app and in the next step we can install it from the published repository.
 
-```
+```sh
 helm delete test-app
 ```
 
@@ -437,7 +441,7 @@ helm delete test-app
 
 You can now add instructions for how other users should consume your chart.
 
-```
+```sh
 # First they add the helm repo
 helm repo add expressjs-k8s https://alexellis.github.io/expressjs-k8s/
 
@@ -458,7 +462,7 @@ Now run `make charts`, do a git commit and push that up to the origin.
 
 You can now run `helm repo update` and check that the version of the chart was updated:
 
-```
+```sh
 $ helm show chart expressjs-k8s/expressjs-k8s
 
 apiVersion: v2
@@ -487,7 +491,7 @@ You may also find that some Helm charts are not yet ready for Helm 3 and still n
 Additional information and links
 
 * Docs: [Helm 3 - charts, blog posts and documentation](https://helm.sh)
-* Docs: [Express.js microservice framework for node.js](https://expressjs.com)
+* Docs: [Express.js microservice framework for Node.js](https://expressjs.com)
 * Tool: [k3sup ('ketchup') - bootstrap k3s and helm charts with ease](https://github.com/alexellis/k3sup)
 
 You can also [apply for the #KUBE100 program](https://www.civo.com/blog/kube100-is-here) if you'd like to try [Managed k3s](https://blog.alexellis.io/the-worlds-first-managed-k3s/).
