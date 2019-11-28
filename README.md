@@ -8,7 +8,7 @@ Developers adopting [Kubernetes](https://kubernetes.io) often turn to [helm](htt
 
 Up until recently Helm 2 also shipped with a server side component called `tiller`. Unfortunately `tiller` was insecure by default and left many clusters vulnerable to attack. Steps were published by the project maintainers to manually lock-down access, but it was too late and so there is now a mix of helm lovers and haters in the world.
 
-Helm 3 aims to consolidate developers by simply removing the `tiller` component all together. The logic that controlled updates and removal is now run at the client-side and only minimal state is retained with the cluster. In this guide we'll be using helm 3, but if you have to use helm 2 for some reason, then the steps will be largely the same.
+Helm 3 aims to consolidate developers by simply removing the `tiller` component. The logic that controlled updates and removal is now run at the client-side and only minimal state is retained with the cluster. In this guide we'll be using helm 3, but if you have to use helm 2 for some reason, then the steps will be largely the same.
 
 ## The guide
 
@@ -93,7 +93,9 @@ postgres=# create table tester (name int)
 select * from tester;
 ```
 
-Remove the chart
+Exit with Control + D.
+
+Now you can remove the chart:
 
 ```
 helm delete postgresql
@@ -374,7 +376,7 @@ curl http://fce0cc8e-839e-475c-9845-d79487ab9fe4.k8s.civo.com/links -H "Host: ex
 [{"name":"github","url":"https://github.com/alexellis"},{"name":"twitter","url":"https://twitter.com/alexellisuk"},{"name":"blog","url":"https://blog.alexellis.io"},{"name":"sponsors","url":"https://github.com/users/alexellis/sponsorship"}]
 ```
 
-If you do actually want to create a real domain for this service, just register a domain and add a DNS CNAME or A entry to the DNS name or IP address of your Kubernetes cluster. For more help, please feel free to reach out to the team on Slack.
+If you do actually want to create a real domain for this service, just register a domain and add a DNS CNAME or A entry to the DNS name or IP address of your Kubernetes cluster. For more help, please feel free to [reach out to the team on Slack](https://civo-community.slack.com/).
 
 ### Publish your chart
 
@@ -480,7 +482,7 @@ Two of the charts I maintain on a regular basis are included below for your peru
 * [OpenFaaS - Serverless-style applications on Kubernetes made simple](https://github.com/openfaas/faas-netes/tree/master/chart/openfaas)
 * [inlets-operator - automate reverse proxy tunnels to expose in-cluster services on the Internet](https://github.com/inlets/inlets-operator/tree/master/chart/inlets-operator)
 
-You may also find that some Helm charts are not yet ready for Helm 3 and still need to be installed with Helm 3. Over time I would expect all charts to be migrated over, but since Helm 3 only went GA at KubeCon in November 2019, it's still early days. One of the original Helm founders [(Rimas Mocevicius)](https://rimusz.net) wrote a plugin called [helm-2to3](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) which can help you migrate charts that are lagging behind.
+You may also find that some Helm charts are not yet ready for Helm 3 and still need to be installed with Helm 2. Over time I would expect all charts to be migrated over, but since Helm 3 only went GA at KubeCon in November 2019, it's still early days. One of the original Helm founders [(Rimas Mocevicius)](https://rimusz.net) wrote a plugin called [helm-2to3](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/) which can help you migrate charts that are lagging behind.
 
 Additional information and links
 
