@@ -63,7 +63,7 @@ You'll notice that sometimes there are various versions of a chart. The `stable`
 
 It turns out that the helm team decided to remove the `stable` repository which was generally used to install charts. Let's add it back in:
 
-```
+```sh
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
 ```
@@ -92,7 +92,7 @@ To connect to your database run the following command:
 
 Create a table and select from it:
 
-```
+```sh
 postgres=# create table tester (name int)   
 select * from tester;
 ```
@@ -101,7 +101,7 @@ Exit with Control + D.
 
 Now you can remove the chart:
 
-```
+```sh
 helm delete postgresql
 ```
 
@@ -158,7 +158,7 @@ Templates can be overridden in two ways:
 
 * By defining a `values.yaml`
 
-```
+```yaml
 domain: example.com
 ```
 
@@ -223,7 +223,8 @@ You'll get some sample files you can edit:
 The chart comes with samples that we can edit. Your task is now to translate our plain YAML files with hard-coded values into the sample templates that were provided via `helm create`.
 
 We have 5 files in our plain YAMLs:
-```
+
+```sh
 ├── clusterissuer.yaml
 ├── dep.yaml
 ├── ingress-inlets.yaml
@@ -395,7 +396,7 @@ Add a `docs` folder with `mkdir -p docs`
 
 Add a `Makefile`:
 
-```makefile
+```Makefile
 .PHONY
 charts:
 	cd chart && helm package expressjs-k8s/
